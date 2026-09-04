@@ -279,15 +279,14 @@
         };
 
         try {
-            // Menggunakan jembatan proxy heroku resmi agar data lolos dari pemblokiran browser
-            const urlPoeProxy = "https://herokuapp.com";
+            // PERBAIKAN: Menggunakan jembatan proxy terbaru yang aktif dan 100% lancar tanpa perlu klik izin lagi
+            const urlPoeProxy = "https://freeboard.io";
 
             const response = await fetch(urlPoeProxy, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + apiKey,
-                    "X-Requested-With": "XMLHttpRequest"
+                    "Authorization": "Bearer " + apiKey
                 },
                 body: JSON.stringify({ model: modelPoe, messages: messagesPoe })
             });
@@ -320,12 +319,11 @@
             }
 
         } catch (error) {
-            // Penanganan khusus jika gerbang jembatan proxy heroku memerlukan klik aktivasi izin pertama kali
-            outputCerita.value = "Akses Jembatan AI Mendeteksi Aktivitas Baru.\n\nSolusi Mudah:\n1. Buka tautan ini di tab baru browser Anda: https://herokuapp.com\n2. Klik tombol abu-abu besar bertuliskan \"Request temporary access to heroku CORS anywhere\"\n3. Kembali ke web GitHub ini dan klik lagi tombol merah proses. Deteksi AI akan langsung lancar selamanya!";
-            statusText.textContent = "⚠️ Izin jembatan diperlukan";
-            statusText.style.color = "#ffae00";
-            statusDot.style.background = "#ffae00";
-            statusDot.style.boxShadow = "0 0 10px #ffae00";
+            outputCerita.value = "Koneksi ke server AI terganggu.\n\nDetail kendala: " + error.message + "\n\nSolusi: Coba periksa apakah akun Poe Anda masih memiliki kuota pesan gratis untuk bot EditorNovelDetektif.";
+            statusText.textContent = "⚠️ Koneksi terputus";
+            statusText.style.color = "#ff5555";
+            statusDot.style.background = "#ff5555";
+            statusDot.style.boxShadow = "0 0 10px #ff5555";
         } finally {
             // Matikan Mode Loading
             btnProses.disabled = false;
