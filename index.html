@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Detective Story Editor - Otak Otomatis</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121214; color: #e0e0e0; padding: 20px; max-width: 950px; margin: auto; }
+        h1 { color: #ff3333; text-align: center; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; margin-bottom: 5px; }
+        p.subtitle { text-align: center; color: #888; margin-bottom: 25px; }
+        
+        .api-box { background-color: #1a1a24; border: 1px solid #3d3d5c; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .api-box label { color: #ff9900; font-weight: bold; display: block; margin-bottom: 5px; }
+        .api-box input { width: 100%; background: #252533; border: 1px solid #3d3d5c; padding: 10px; color: white; border-radius: 5px; box-sizing: border-box; }
+        .api-box small { color: #777; display: block; margin-top: 5px; }
+        .api-box a { color: #00ff00; text-decoration: none; }
+
+        .container { display: flex; flex-direction: column; gap: 20px; }
+        @media (min-width: 768px) { .container { flex-direction: row; } }
+        .area-box { flex: 1; display: flex; flex-direction: column; }
+        label.area-label { font-weight: bold; margin-bottom: 8px; color: #00ff00; }
+        textarea { width: 100%; height: 350px; background-color: #1a1a24; color: #fff; border: 2px solid #3d3d5c; border-radius: 8px; padding: 15px; font-size: 16px; line-height: 1.6; resize: none; box-sizing: border-box; }
+        textarea:focus { border-color: #ff3333; outline: none; }
+        
+        .btn-container { text-align: center; margin: 25px 0; }
+        button { background-color: #ff3333; color: white; border: none; padding: 15px 45px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 51, 51, 0.4); }
+        button:hover { background-color: #cc0000; transform: translateY(-2px); }
+        button:disabled { background-color: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+        
+        .loading { display: none; color: #ff9900; font-weight: bold; text-align: center; margin-top: 10px; font-family: monospace; }
+        
+        /* Menyembunyikan elemen AI asli dari layar agar tampilan tetap rapi */
+        gm-ask { display: none; }
+    </style>
+    <!-- Memasang Otak AI Resmi Langsung dari Server Keamanan Google -->
+    <script type="module" src="https://unpkg.com"></script>
+</head>
+<body>
+
+    <h1>🕵️ AI DETECTIVE STORY EDITOR</h1>
+    <p class="subtitle">Didukung Otak AI Otomatis untuk Menyusun, Menambah Kata, & Memperbaiki Kalimat</p>
+
+    <!-- Kolom Setup API Key -->
+    <div class="api-box">
+        <label>🔑 Masukkan Google Gemini API Key Anda:</label>
+        <input type="password" id="apiKeyInput" placeholder="Tempel AI API Key di sini (AIzaSy...)">
+        <small>Buat kunci gratisan Anda di <a href="https://google.com" target="_blank">Google AI Studio</a></small>
+    </div>
+
+    <div class="container">
+        <!-- Area Ketik Kasar -->
+        <div class="area-box">
+            <label class="area-label">📝 Tulis Cerita Kasar (Bebas Typo, Kalimat Kurang / Berantakan):</label>
+            <textarea id="inputCerita" placeholder="Ketik draf kasarmu di sini... Contoh: duduk manis depan rumah melihat pemadangan kota yang indah sore hari, disini aku berkerja di kepolisisan bidang unit kejahatan"></textarea>
+        </div>
+
+        <!-- Area Hasil Otomatis AI -->
+        <div class="area-box">
+            <label class="area-label">✨ Hasil Tulis Ulang Otomatis Otak AI:</label>
+            <textarea id="outputCerita" readonly placeholder="Kalimat hasil revisi yang rapi, dramatis, dan mengalir akan muncul di sini..."></textarea>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button id="btnProses" onclick="prosesDenganOtakAI()">🚀 REVISI PINTAR LEWAT AI</button>
+        <div id="loadingText" class="loading">Otak AI sedang membaca dan menyusun ulang naskah novelmu... ⏳</div>
+    </div>
+
+    <!-- Elemen Penghubung Otak AI Google -->
+    <gm-ask id="aiEngine" model="gemini-1.5-flash"></gm-ask>
+
+    <script>
+        // Fungsi Utama untuk Menggerakkan Otak AI
+        async function prosesDenganOtakAI() {
+            const apiKey = document.getElementById("apiKeyInput").value.trim();
+            const teksInput = document.getElementById("inputCerita").value.trim();
+            const outputArea = document.getElementById("outputCerita");
+            const btn = document.getElementById("btnProses");
+            const loading = document.getElementById("loadingText");
+
+            // Validasi Input Pengguna
+            if (!apiKey) {
+                alert("Mohon masukkan Gemini API Key terlebih dahulu di kolom atas!");
+                return;
+            }
+            if (!teksInput) {
+                alert("Ketik naskah ceritamu terlebih dahulu di kolom kiri!");
+                return;
+            }
+            // Mengaktifkan Efek Menunggu (Loading)
+            btn.disabled = true;
+            loading.style.display = "block";
+            outputArea.value = "";
+
+            // Instruksi Rahasia Agar AI Menjadi Editor yang Mengerti Struktur Kalimat Kurang
+            const bumbuPrompt = `Kamu adalah editor fiksi profesional khusus novel detektif dan misteri. 
+Tugas utamanya:
+1. Perbaiki kata-kata yang typo atau salah ketik secara total.
+2. Tambahkan kata-kata yang kurang agar struktur kalimatnya utuh dan nyaman dibaca.
+3. Ubah dan susun ulang susunan kalimat kasarnya menjadi paragraf pembuka novel fiksi yang mengalir, dramatis, estetis, dan sinematik tanpa mengubah niat alur asli penulis.
+4. JANGAN mengubah keterangan waktu (jika tertulis sore jangan diganti malam).
+
+Naskah kasar penulis yang harus kamu ubah:
+"${teksInput}"
+
+PENTING: Berikan HANYA hasil akhir teks ceritanya saja tanpa ada kalimat pengantar, penutup, atau basa-basi apa pun dari dirimu!`;
+            try {
+                // Memanggil elemen penghubung AI Google yang tertanam di halaman web
+                const engineAI = document.getElementById("aiEngine");
+                
+                // Menyuntikkan Kunci API Key pengguna secara aman sebelum menembak server
+                engineAI.setAttribute("key", apiKey);
+
+                // Mengirimkan teks instruksi rahasia ke dalam inti otak Gemini
+                const responsServer = await engineAI.send(bumbuPrompt);
+                
+                // Menampung teks mentah kiriman balik dari AI
+                let hasilTeks = "";
+                if (responsServer && responsServer.text) {
+                    hasilTeks = responsServer.text.trim();
+                } else if (engineAI.response && engineAI.response.text) {
+                    hasilTeks = engineAI.response.text.trim();
+                }
+
+                // Jika AI mengembalikan format markdown petik tiga, bersihkan otomatis
+                if (hasilTeks.startsWith("```")) {
+                    hasilTeks = hasilTeks.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
+                }
+
+                if (hasilTeks) {
+                    outputArea.value = hasilTeks;
+                } else {
+                    outputArea.value = "Otak AI gagal merespons. Pastikan API Key Anda benar, aktif, dan kuota gratisan masih tersedia.";
+                }
+
+            } catch (kendalaSistem) {
+                outputArea.value = "Gagal memproses naskah.\n\nDetail Masalah: " + kendalaSistem.message + "\n\nSolusi: Pastikan susunan kode API Key (AIzaSy...) sudah lengkap dan tidak ada huruf yang terpotong saat menyalin.";
+                console.error(kendalaSistem);
+            }
+            finally {
+                // Mematikan Efek Menunggu setelah proses selesai sepenuhnya
+                btn.disabled = false;
+                loading.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
