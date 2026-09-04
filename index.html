@@ -3,98 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Kerja Penulis Novel Detektif</title>
+    <title>AI Asisten Editor Novel Detektif - Powered by Poe</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #121214; 
-            color: #e0e0e0; 
-            padding: 20px; 
-            max-width: 950px; 
-            margin: auto; 
-        }
-        h1 { 
-            color: #ff3333; 
-            text-align: center; 
-            font-family: 'Courier New', Courier, monospace; 
-            letter-spacing: 2px; 
-            margin-bottom: 5px; 
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121214; color: #e0e0e0; padding: 20px; max-width: 950px; margin: auto; }
+        h1 { color: #ff3333; text-align: center; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; margin-bottom: 5px; }
         p.subtitle { text-align: center; color: #888; margin-bottom: 25px; }
         
+        .api-box { background-color: #1a1a24; border: 1px solid #3d3d5c; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .api-box label { color: #ff9900; font-weight: bold; display: block; margin-bottom: 5px; }
+        .api-box input { width: 100%; background: #252533; border: 1px solid #3d3d5c; padding: 10px; color: white; border-radius: 5px; box-sizing: border-box; }
+        .api-box small { color: #777; display: block; margin-top: 5px; }
+        .api-box a { color: #00ff00; text-decoration: none; }
+
         .container { display: flex; flex-direction: column; gap: 20px; }
+        @media (min-width: 768px) { .container { flex-direction: row; } }
         .area-box { flex: 1; display: flex; flex-direction: column; }
         label.area-label { font-weight: bold; margin-bottom: 8px; color: #00ff00; }
-        
-        textarea { 
-            width: 100%; 
-            height: 300px; 
-            background-color: #1a1a24; 
-            color: #fff; 
-            border: 2px solid #3d3d5c; 
-            border-radius: 8px; 
-            padding: 15px; 
-            font-size: 16px; 
-            line-height: 1.6; 
-            resize: none; 
-            box-sizing: border-box; 
-        }
+        textarea { width: 100%; height: 350px; background-color: #1a1a24; color: #fff; border: 2px solid #3d3d5c; border-radius: 8px; padding: 15px; font-size: 16px; line-height: 1.6; resize: none; box-sizing: border-box; }
         textarea:focus { border-color: #ff3333; outline: none; }
         
-        .btn-container { text-align: center; margin: 25px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .btn-container { text-align: center; margin: 25px 0; }
+        button { background-color: #ff3333; color: white; border: none; padding: 15px 45px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 51, 51, 0.4); }
+        button:hover { background-color: #cc0000; transform: translateY(-2px); }
+        button:disabled { background-color: #444; color: #888; cursor: not-allowed; box-shadow: none; }
         
-        /* Tombol Salin Teks Kasar */
-        .btn-copy { background-color: #3d3d5c; color: white; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; }
-        .btn-copy:hover { background-color: #52527a; }
-        
-        /* Tombol Utama Buka AI Poe */
-        .btn-launch { background-color: #ff3333; color: white; border: none; padding: 18px 50px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 51, 51, 0.4); text-decoration: none; display: inline-block; }
-        .btn-launch:hover { background-color: #cc0000; transform: translateY(-2px); }
-        
-        .tips { background-color: #1a1a24; border-left: 4px solid #00ff00; padding: 15px; margin-top: 30px; border-radius: 0 8px 8px 0; font-size: 14px; color: #b5b5c3; line-height: 1.6; }
+        .loading { display: none; color: #ff9900; font-weight: bold; text-align: center; margin-top: 10px; font-family: monospace; }
     </style>
 </head>
 <body>
 
-    <h1>🕵️ AI DETECTIVE STORY WORKSPACE</h1>
-    <p class="subtitle">Ruang Ketik Draf Mandiri Terintegrasi Mesin AI Pintar Poe</p>
+    <h1>🕵️ AI DETECTIVE STORY EDITOR</h1>
+    <p class="subtitle">Proses Sinkronisasi Otomatis di Tempat Memakai Otak AI Bot Poe Anda</p>
+
+    <div class="api-box">
+        <label>🔑 Masukkan Poe API Key Anda:</label>
+        <input type="password" id="apiKeyInput" placeholder="Tempel Poe API Key di sini...">
+        <small>Ambil kunci integrasi gratis milikmu di <a href="https://poe.com" target="_blank">Poe API Keys</a></small>
+    </div>
 
     <div class="container">
         <div class="area-box">
-            <label class="area-label">📝 Tulis/Simpan Draf Cerita Kasarmu di Sini (Bebas Typo):</label>
-            <textarea id="inputCerita" placeholder="Ketik ide atau draf ceritamu di sini sebelum dilempar ke AI... Contoh: duduk manis depan rumah melihat pemadangan kota yang indah sore hari, disini aku berkerja di kepolisisan bidang unit kejahatan"></textarea>
+            <label class="area-label">📝 Tulis Cerita Kasar (Bebas Typo & Kalimat Kurang):</label>
+            <textarea id="inputCerita" placeholder="Ketik draf kasarmu di sini..."></textarea>
+        </div>
+        <div class="area-box">
+            <label class="area-label">✨ Hasil Tulis Ulang Otomatis Otak AI Poe:</label>
+            <textarea id="outputCerita" readonly placeholder="Hasil revisi yang rapi dan mengalir akan langsung muncul di sini secara otomatis..."></textarea>
         </div>
     </div>
 
     <div class="btn-container">
-        <!-- Tombol untuk menyalin teks yang diketik agar tinggal paste di Poe -->
-        <button class="btn-copy" onclick="salinDrafCerita()">📋 SALIN TEKS CERITA</button>
-        
-        <!-- Tombol khusus meluncurkan langsung ke halaman Bot Poe Kamu -->
-        <a href="https://poe.com" target="_blank" class="btn-launch">🚀 LUNCURKAN BOT EDITOR NOVEL (POE)</a>
+        <button id="btnProses" onclick="prosesDenganPoeAI()">🚀 REVISI PINTAR LEWAT AI</button>
+        <div id="loadingText" class="loading">Otak AI Poe sedang menyusun ulang naskah ceritamu... ⏳</div>
     </div>
-
-    <div class="tips">
-        <strong>💡 Alur Kerja Efektif & Anti-Error:</strong><br>
-        1. Ketik seluruh draf ceritamu yang berantakan di dalam kotak teks di atas.<br>
-        2. Klik tombol <strong>"SALIN TEKS CERITA"</strong> untuk meng-copy naskah kasar tersebut secara otomatis.<br>
-        3. Klik tombol merah besar <strong>"LUNCURKAN BOT EDITOR NOVEL"</strong> untuk membuka halaman bot pintarmu di tab baru.<br>
-        4. Tempel (Paste) teks kasarmu di sana, dan AI akan langsung menyulapnya menjadi teks novel yang luar biasa indah!
-    </div>
-
     <script>
-        function salinDrafCerita() {
-            const teks = document.getElementById("inputCerita");
-            if (!teks.value.trim()) {
-                alert("Ketik naskah ceritamu terlebih dahulu sebelum menyalin!");
+        async function prosesDenganPoeAI() {
+            const apiKey = document.getElementById("apiKeyInput").value.trim();
+            const teksInput = document.getElementById("inputCerita").value.trim();
+            const outputArea = document.getElementById("outputCerita");
+            const btn = document.getElementById("btnProses");
+            const loading = document.getElementById("loadingText");
+
+            if (!apiKey) {
+                alert("Mohon masukkan Poe API Key terlebih dadaulu di kolom atas!");
                 return;
             }
-            teks.select();
-            teks.setSelectionRange(0, 99999); // Untuk perangkat HP
-            navigator.clipboard.writeText(teks.value);
-            alert("Draf ceritamu berhasil disalin! Silakan tempelkan langsung ke kolom chat Poe.");
+            if (!teksInput) {
+                alert("Ketik naskah ceritamu terlebih dahulu di kolom kiri!");
+                return;
+            }
+
+            // Aktifkan efek loading menunggu
+            btn.disabled = true;
+            loading.style.display = "block";
+            outputArea.value = "";
+            // Mengirim teks ke bot buatanmu di Poe dengan instruksi khusus revisi novel
+            const instruksiTeks = "Proses draf kasar novel berikut menggunakan aturan bot EditorNovelDetektif: \"" + teksInput + "\"";
+
+            try {
+                // Endpoint resmi OpenAI-Compatible API milik Poe Creator Platform
+                const urlPoe = "https://poe.com";
+                
+                const dataKirim = {
+                    model: "EditorNovelDetektif", // Menyambungkan langsung ke nama bot Poe kamu
+                    messages: [{ role: "user", content: instruksiTeks }]
+                };
+
+                const response = await fetch(urlPoe, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + apiKey // Mengesahkan akses menggunakan API Key Poe
+                    },
+                    body: JSON.stringify(dataKirim)
+                });
+
+                const data = await response.json();
+                // Menyaring teks kiriman balik dari server Poe untuk ditampilkan ke kolom kanan
+                if (data && data.choices && data.choices[0] && data.choices[0].message) {
+                    let hasilRevisi = data.choices[0].message.content.trim();
+                    
+                    // Membersihkan bungkusan kode markdown jika disertakan oleh AI
+                    if (hasilRevisi.startsWith("```")) {
+                        hasilRevisi = hasilRevisi.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
+                    }
+                    outputArea.value = hasilRevisi;
+                } else if (data.error) {
+                    outputArea.value = "Error dari Poe: " + data.error.message;
+                } else {
+                    outputArea.value = "Gagal mendapatkan respons otomatis. Pastikan nama bot 'EditorNovelDetektif' sudah sesuai dan API Key aktif.";
+                }
+
+            } catch (error) {
+                outputArea.value = "Koneksi ke server Poe terputus. Detail masalah: " + error.message;
+                console.error(error);
+            } finally {
+                // Matikan efek loading
+                btn.disabled = false;
+                loading.style.display = "none";
+            }
         }
     </script>
-
 </body>
 </html>
