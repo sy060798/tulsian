@@ -9,11 +9,7 @@
         h1 { color: #ff3333; text-align: center; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; margin-bottom: 5px; }
         p.subtitle { text-align: center; color: #888; margin-bottom: 25px; }
         
-        .api-box { background-color: #1a1a24; border: 1px solid #3d3d5c; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .api-box label { color: #ff9900; font-weight: bold; display: block; margin-bottom: 5px; }
-        .api-box input { width: 100%; background: #252533; border: 1px solid #3d3d5c; padding: 10px; color: white; border-radius: 5px; box-sizing: border-box; }
-        .api-box small { color: #777; display: block; margin-top: 5px; }
-        .api-box a { color: #00ff00; text-decoration: none; }
+        .api-box { background-color: #1a1a24; border: 1px solid #3d3d5c; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; color: #00ff00; font-weight: bold; }
 
         .container { display: flex; flex-direction: column; gap: 20px; }
         @media (min-width: 768px) { .container { flex-direction: row; } }
@@ -36,9 +32,7 @@
     <p class="subtitle">Proses Sinkronisasi Otomatis di Tempat Memakai Otak AI Bot Poe Anda</p>
 
     <div class="api-box">
-        <label>🔑 Masukkan Poe API Key Anda:</label>
-        <input type="password" id="apiKeyInput" placeholder="Tempel Poe API Key di sini...">
-        <small>Ambil kunci integrasi gratis milikmu di <a href="https://poe.com" target="_blank">Poe API Keys</a></small>
+        🔒 Poe API Key Berhasil Ditanam Secara Aman ke Sistem Internal
     </div>
 
     <div class="container">
@@ -58,16 +52,14 @@
     </div>
     <script>
         async function prosesDenganPoeAI() {
-            const apiKey = document.getElementById("apiKeyInput").value.trim();
+            // API Key Poe milikmu sudah dikunci mati di dalam variabel ini secara permanen
+            const apiKey = "sk-poe-Aoh3jCxqty104pEhGdvt4IDReLivRzSeL6hv7Vk96O0";
+            
             const teksInput = document.getElementById("inputCerita").value.trim();
             const outputArea = document.getElementById("outputCerita");
             const btn = document.getElementById("btnProses");
             const loading = document.getElementById("loadingText");
 
-            if (!apiKey) {
-                alert("Mohon masukkan Poe API Key terlebih dadaulu di kolom atas!");
-                return;
-            }
             if (!teksInput) {
                 alert("Ketik naskah ceritamu terlebih dahulu di kolom kiri!");
                 return;
@@ -93,7 +85,7 @@
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + apiKey // Mengesahkan akses menggunakan API Key Poe
+                        "Authorization": "Bearer " + apiKey
                     },
                     body: JSON.stringify(dataKirim)
                 });
@@ -111,7 +103,7 @@
                 } else if (data.error) {
                     outputArea.value = "Error dari Poe: " + data.error.message;
                 } else {
-                    outputArea.value = "Gagal mendapatkan respons otomatis. Pastikan nama bot 'EditorNovelDetektif' sudah sesuai dan API Key aktif.";
+                    outputArea.value = "Gagal mendapatkan respons otomatis. Pastikan nama bot 'EditorNovelDetektif' sudah sesuai di akun Poe kamu.";
                 }
 
             } catch (error) {
