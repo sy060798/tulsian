@@ -5,204 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Detective Story Editor - Poe</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
+            margin: 0; padding: 20px; min-height: 100vh;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             background: radial-gradient(circle at top, #241518 0%, #121214 45%, #09090b 100%);
             color: #e0e0e0;
         }
-
-        .page {
-            width: 100%;
-            max-width: 1100px;
-            margin: auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
+        .page { width: 100%; max-width: 1100px; margin: auto; }
+        header { text-align: center; margin-bottom: 25px; }
         h1 {
-            margin: 0;
-            color: #ff3333;
-            font-family: "Courier New", monospace;
-            font-size: clamp(27px, 5vw, 44px);
-            letter-spacing: 2px;
+            margin: 0; color: #ff3333; font-family: "Courier New", monospace;
+            font-size: clamp(27px, 5vw, 44px); letter-spacing: 2px;
             text-shadow: 0 0 15px rgba(255, 51, 51, 0.35);
         }
-
-        .subtitle {
-            max-width: 700px;
-            margin: 10px auto 0;
-            color: #888;
-            line-height: 1.6;
-        }
-
+        .subtitle { max-width: 700px; margin: 10px auto 0; color: #888; line-height: 1.6; }
         .status-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px;
-            margin-bottom: 20px;
-            background: #191920;
-            border: 1px solid #343445;
-            border-radius: 10px;
-            color: #00ff08;
-            font-weight: 600;
-            text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 14px; margin-bottom: 20px; background: #191920;
+            border: 1px solid #343445; border-radius: 10px; color: #00ff08;
+            font-weight: 600; text-align: center;
         }
         .status-dot {
-            width: 9px;
-            height: 9px;
-            background: #00ff08;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ff08;
-            animation: pulse 1.5s infinite;
+            width: 9px; height: 9px; background: #00ff08; border-radius: 50%;
+            box-shadow: 0 0 10px #00ff08; animation: pulse 1.5s infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .35; }
-        }
-
-        .editor-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 800px) {
-            .editor-container {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .editor-box {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .area-label {
-            margin-bottom: 9px;
-            color: #00ff08;
-            font-weight: bold;
-            font-size: 15px;
-        }
-
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+        .editor-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 800px) { .editor-container { grid-template-columns: 1fr 1fr; } }
+        .editor-box { display: flex; flex-direction: column; position: relative; }
+        .area-label { margin-bottom: 9px; color: #00ff08; font-weight: bold; font-size: 15px; }
         textarea {
-            width: 100%;
-            min-height: 420px;
-            padding: 16px;
-            resize: vertical;
-            background: #18181f;
-            color: #fff;
-            border: 2px solid #343445;
-            border-radius: 10px;
-            outline: none;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 16px;
-            line-height: 1.7;
-            transition: .2s;
+            width: 100%; min-height: 420px; padding: 16px; resize: vertical;
+            background: #18181f; color: #fff; border: 2px solid #343445;
+            border-radius: 10px; outline: none; font-size: 16px; line-height: 1.7; transition: .2s;
         }
-
-        textarea:focus {
-            border-color: #ff3333;
-            box-shadow: 0 0 0 3px rgba(255, 51, 51, .12);
+        textarea:focus { border-color: #ff3333; box-shadow: 0 0 0 3px rgba(255, 51, 51, .12); }
+        textarea::placeholder { color: #666; }
+        textarea[readonly] { background: #131318; }
+        .counter { margin-top: 6px; color: #666; font-size: 12px; text-align: right; }
+        .btn-copy {
+            margin-top: 6px; padding: 6px 14px; background: #343445; color: #fff;
+            border: none; border-radius: 5px; cursor: pointer; font-size: 12px;
+            align-self: flex-end; transition: 0.2s;
         }
-
-        textarea::placeholder {
-            color: #666;
-        }
-
-        textarea[readonly] {
-            background: #131318;
-        }
-
-        .counter {
-            margin-top: 6px;
-            color: #666;
-            font-size: 12px;
-            text-align: right;
-        }
-
-        .button-area {
-            text-align: center;
-            margin: 25px 0;
-        }
-
+        .btn-copy:hover { background: #ff3333; }
+        .button-area { text-align: center; margin: 25px 0; }
         button {
-            padding: 15px 42px;
-            border: none;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #ff3333, #cc0000);
-            color: #fff;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255, 51, 51, .35);
-            transition: .2s;
+            padding: 15px 42px; border: none; border-radius: 999px;
+            background: linear-gradient(135deg, #ff3333, #cc0000); color: #fff;
+            font-size: 17px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 51, 51, .35); transition: .2s;
         }
-
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(255, 51, 51, .5);
-        }
-
-        button:disabled {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .loading {
-            display: none;
-            margin-top: 12px;
-            color: #ffae00;
-            font-family: monospace;
-            font-size: 14px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255, 51, 51, .5); }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+        .loading { display: none; margin-top: 12px; color: #ffae00; font-family: monospace; font-size: 14px; }
+        .loading.show { display: block; }
         .tips {
-            padding: 15px 18px;
-            margin-top: 20px;
-            background: rgba(255,255,255,.03);
-            border-left: 3px solid #ff3333;
-            border-radius: 5px;
-            color: #888;
-            font-size: 13px;
-            line-height: 1.6;
+            padding: 15px 18px; margin-top: 20px; background: rgba(255,255,255,.03);
+            border-left: 3px solid #ff3333; border-radius: 5px; color: #888; font-size: 13px; line-height: 1.6;
         }
-
-        footer {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #292932;
-            color: #555;
-            text-align: center;
-            font-size: 12px;
-        }
+        footer { margin-top: 25px; padding-top: 15px; border-top: 1px solid #292932; color: #555; text-align: center; font-size: 12px; }
     </style>
 </head>
 <body>
 <div class="page">
     <header>
         <h1>🕵️ AI DETECTIVE STORY EDITOR</h1>
-        <p class="subtitle">
-            Editor AI untuk memperbaiki typo, tata bahasa, dialog, deskripsi, dan alur novel detektif.
-        </p>
+        <p class="subtitle">Editor AI untuk memperbaiki typo, tata bahasa, dialog, deskripsi, dan alur novel detektif.</p>
     </header>
 
     <div class="status-box">
@@ -213,13 +83,14 @@
     <div class="editor-container">
         <div class="editor-box">
             <label class="area-label" for="inputCerita">📝 Draf Cerita</label>
-            <textarea id="inputCerita" maxlength="50000" placeholder="Tulis atau tempel draf kasar novelmu di sini...&#10;&#10;Contoh:&#10;&#10;Malam itu hujan turun deras. Detektif Arya datang ke rumah korban. Dia melihat ada darah di lantai tetapi tidak menemukan siapa-siapa..."></textarea>
+            <textarea id="inputCerita" maxlength="50000" placeholder="Tulis atau tempel draf kasar novelmu di sini..."></textarea>
             <div id="counter" class="counter">0 / 50.000 karakter</div>
         </div>
 
         <div class="editor-box">
             <label class="area-label" for="outputCerita">✨ Hasil Revisi AI</label>
             <textarea id="outputCerita" readonly placeholder="Hasil revisi AI akan muncul di sini..."></textarea>
+            <button type="button" id="btnCopy" class="btn-copy">📋 SALIN HASIL REVISI</button>
         </div>
     </div>
 
@@ -229,42 +100,41 @@
     </div>
 
     <div class="tips">
-        <strong>Tips:</strong> Masukkan satu adegan atau beberapa paragraf sekaligus. AI akan mempertahankan inti cerita, karakter, dan kejadian penting sambil membuat tulisan lebih natural dan enak dibaca.
+        <strong>Tips Penting (CORS Proxy):</strong> Jika tombol diklik dan memunculkan error 'Failed to fetch', silakan buka tab baru di browser Anda, kunjungi tautan <u>https://herokuapp.com</u>, lalu klik tombol <b>"Request temporary access to the demo server"</b> terlebih dahulu.
     </div>
 
-    <footer>
-        AI Detective Story Editor
-    </footer>
+    <footer>AI Detective Story Editor</footer>
 </div>
 
 <script>
-    // Memasang Kunci API Poe Milikmu Secara Tetap ke Dalam Sistem Internal
     const apiKey = "sk-poe-Aoh3jCxqty104pEhGdvt4IDReLivRzSeL6hv7Vk96O0";
-
     const inputCerita = document.getElementById("inputCerita");
     const outputCerita = document.getElementById("outputCerita");
     const btnProses = document.getElementById("btnProses");
+    const btnCopy = document.getElementById("btnCopy");
     const loading = document.getElementById("loading");
     const counter = document.getElementById("counter");
     const statusText = document.getElementById("statusText");
     const statusDot = document.querySelector(".status-dot");
 
-    // Hitung Karakter Saat Mengetik
     inputCerita.addEventListener("input", () => {
-        const jumlahKarakter = inputCerita.value.length;
-        counter.textContent = `${jumlahKarakter.toLocaleString('id-ID')} / 50.000 karakter`;
+        counter.textContent = `${inputCerita.value.length.toLocaleString('id-ID')} / 50.000 karakter`;
+    });
+
+    btnCopy.addEventListener("click", () => {
+        if (!outputCerita.value.trim()) { alert("Belum ada teks hasil revisi!"); return; }
+        navigator.clipboard.writeText(outputCerita.value);
+        const originalText = btnCopy.textContent;
+        btnCopy.textContent = "✅ BERHASIL DISALIN!";
+        setTimeout(() => { btnCopy.textContent = originalText; }, 2000);
     });
 
     btnProses.addEventListener("click", prosesDenganPoeAI);
+    
     async function prosesDenganPoeAI() {
         const teksInput = inputCerita.value.trim();
+        if (!teksInput) { alert("Tulis draf kasar terlebih dahulu!"); return; }
 
-        if (!teksInput) {
-            alert("Tulis atau tempel draf kasar novelmu terlebih dahulu di kolom kiri!");
-            return;
-        }
-
-        // Aktifkan Mode Memproses (Loading) & Ubah Lampu Status Jadi Oranye
         btnProses.disabled = true;
         loading.classList.add("show");
         outputCerita.value = "";
@@ -273,59 +143,50 @@
         statusDot.style.background = "#ffae00";
         statusDot.style.boxShadow = "0 0 10px #ffae00";
 
-        const { model: modelPoe, messages: messagesPoe } = {
-            model: "EditorNovelDetektif",
-            messages: [{ role: "user", content: "Proses draf kasar novel berikut menggunakan aturan bot EditorNovelDetektif: \"" + teksInput + "\"" }]
-        };
+        const modelPoe = "EditorNovelDetektif"; 
+        const systemPrompt = "Anda adalah seorang editor novel detektif profesional. Perbaiki typo, tata bahasa, buat dialog natural, pertajam deskripsi suasana misteri, dan rapikan alur.";
 
         try {
-            // PERBAIKAN: Menggunakan jembatan proxy terbaru yang aktif dan 100% lancar tanpa perlu klik izin lagi
-            const urlPoeProxy = "https://freeboard.io";
+            const proxyUrl = "https://herokuapp.com";
+            const targetUrl = "https://poe.com";
 
-            const response = await fetch(urlPoeProxy, {
+            const response = await fetch(proxyUrl + targetUrl, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + apiKey
+                    "Authorization": `Bearer ${apiKey}`,
+                    "X-Requested-With": "XMLHttpRequest"
                 },
-                body: JSON.stringify({ model: modelPoe, messages: messagesPoe })
+                body: JSON.stringify({
+                    model: modelPoe,
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: teksInput }
+                    ],
+                    temperature: 0.7
+                })
             });
 
+            if (!response.ok) throw new Error(`Status: ${response.status}`);
             const data = await response.json();
-
-            // Membaca Teks Kiriman Balik Dari AI Poe
-            if (data && data.choices && data.choices[0] && data.choices[0].message) {
-                let hasilRevisi = data.choices[0].message.content.trim();
-                
-                if (hasilRevisi.startsWith("```")) {
-                    hasilRevisi = hasilRevisi.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
-                }
-                
-                outputCerita.value = hasilRevisi;
-                statusText.textContent = "✓ Penyuntingan selesai berhasil";
-                statusText.style.color = "#00ff88";
-                statusDot.style.background = "#00ff88";
-                statusDot.style.boxShadow = "0 0 10px #00ff88";
-            } else if (data.error) {
-                outputCerita.value = "Error dari Poe: " + data.error.message;
-                statusText.textContent = "⚠️ Terjadi kesalahan sistem";
-                statusText.style.color = "#ff5555";
-                statusDot.style.background = "#ff5555";
-                statusDot.style.boxShadow = "0 0 10px #ff5555";
+            
+            if (data.choices && data.choices[0] && data.choices[0].message) {
+                outputCerita.value = data.choices[0].message.content.trim();
+                statusText.textContent = "✅ Penyuntingan selesai!";
+                statusText.style.color = "#00ff08";
+                statusDot.style.background = "#00ff08";
+                statusDot.style.boxShadow = "0 0 10px #00ff08";
             } else {
-                outputCerita.value = "Gagal memproses. Pastikan nama bot 'EditorNovelDetektif' sudah aktif di akun Poe kamu.";
-                statusText.textContent = "⚠️ Gagal merespons";
-                statusDot.style.background = "#ff5555";
+                throw new Error("Format respons tidak sesuai.");
             }
-
         } catch (error) {
-            outputCerita.value = "Koneksi ke server AI terganggu.\n\nDetail kendala: " + error.message + "\n\nSolusi: Coba periksa apakah akun Poe Anda masih memiliki kuota pesan gratis untuk bot EditorNovelDetektif.";
-            statusText.textContent = "⚠️ Koneksi terputus";
-            statusText.style.color = "#ff5555";
-            statusDot.style.background = "#ff5555";
-            statusDot.style.boxShadow = "0 0 10px #ff5555";
+            console.error(error);
+            alert("Koneksi terganggu: " + error.message);
+            statusText.textContent = "❌ Terjadi kesalahan";
+            statusText.style.color = "#ff3333";
+            statusDot.style.background = "#ff3333";
+            statusDot.style.boxShadow = "0 0 10px #ff3333";
         } finally {
-            // Matikan Mode Loading
             btnProses.disabled = false;
             loading.classList.remove("show");
         }
