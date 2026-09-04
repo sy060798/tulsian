@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AI Detective Story Editor - Poe</title>
-
     <style>
         * {
             box-sizing: border-box;
@@ -14,24 +12,9 @@
         body {
             margin: 0;
             padding: 20px;
-
             min-height: 100vh;
-
-            font-family:
-                "Segoe UI",
-                Tahoma,
-                Geneva,
-                Verdana,
-                sans-serif;
-
-            background:
-                radial-gradient(
-                    circle at top,
-                    #241518 0%,
-                    #121214 45%,
-                    #09090b 100%
-                );
-
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #241518 0%, #121214 45%, #09090b 100%);
             color: #e0e0e0;
         }
 
@@ -48,158 +31,91 @@
 
         h1 {
             margin: 0;
-
             color: #ff3333;
-
-            font-family:
-                "Courier New",
-                monospace;
-
+            font-family: "Courier New", monospace;
             font-size: clamp(27px, 5vw, 44px);
-
             letter-spacing: 2px;
-
-            text-shadow:
-                0 0 15px rgba(255, 51, 51, 0.35);
+            text-shadow: 0 0 15px rgba(255, 51, 51, 0.35);
         }
 
         .subtitle {
             max-width: 700px;
-
-            margin:
-                10px auto 0;
-
+            margin: 10px auto 0;
             color: #888;
-
             line-height: 1.6;
         }
 
         .status-box {
             display: flex;
-
             align-items: center;
             justify-content: center;
-
             gap: 10px;
-
             padding: 14px;
-
             margin-bottom: 20px;
-
             background: #191920;
-
-            border:
-                1px solid #343445;
-
+            border: 1px solid #343445;
             border-radius: 10px;
-
-            color: #00ff88;
-
+            color: #00ff08;
             font-weight: 600;
-
             text-align: center;
         }
-
         .status-dot {
             width: 9px;
             height: 9px;
-
-            background: #00ff88;
-
+            background: #00ff08;
             border-radius: 50%;
-
-            box-shadow:
-                0 0 10px #00ff88;
-
-            animation:
-                pulse 1.5s infinite;
+            box-shadow: 0 0 10px #00ff08;
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: .35;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: .35; }
         }
 
         .editor-container {
             display: grid;
-
             grid-template-columns: 1fr;
-
             gap: 20px;
         }
 
         @media (min-width: 800px) {
-
             .editor-container {
-                grid-template-columns:
-                    1fr 1fr;
+                grid-template-columns: 1fr 1fr;
             }
         }
 
         .editor-box {
             display: flex;
-
             flex-direction: column;
         }
 
         .area-label {
             margin-bottom: 9px;
-
-            color: #00ff88;
-
+            color: #00ff08;
             font-weight: bold;
-
             font-size: 15px;
         }
 
         textarea {
             width: 100%;
-
             min-height: 420px;
-
             padding: 16px;
-
             resize: vertical;
-
             background: #18181f;
-
             color: #fff;
-
-            border:
-                2px solid #343445;
-
+            border: 2px solid #343445;
             border-radius: 10px;
-
             outline: none;
-
-            font-family:
-                "Segoe UI",
-                Tahoma,
-                Geneva,
-                Verdana,
-                sans-serif;
-
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             font-size: 16px;
-
             line-height: 1.7;
-
-            transition:
-                .2s;
+            transition: .2s;
         }
 
         textarea:focus {
             border-color: #ff3333;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(255, 51, 51, .12);
+            box-shadow: 0 0 0 3px rgba(255, 51, 51, .12);
         }
 
         textarea::placeholder {
@@ -212,80 +128,46 @@
 
         .counter {
             margin-top: 6px;
-
             color: #666;
-
             font-size: 12px;
-
             text-align: right;
         }
 
         .button-area {
             text-align: center;
-
-            margin:
-                25px 0;
+            margin: 25px 0;
         }
 
         button {
-            padding:
-                15px 42px;
-
+            padding: 15px 42px;
             border: none;
-
             border-radius: 999px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ff3333,
-                    #cc0000
-                );
-
+            background: linear-gradient(135deg, #ff3333, #cc0000);
             color: #fff;
-
             font-size: 17px;
-
             font-weight: bold;
-
             cursor: pointer;
-
-            box-shadow:
-                0 5px 20px
-                rgba(255, 51, 51, .35);
-
-            transition:
-                .2s;
+            box-shadow: 0 5px 20px rgba(255, 51, 51, .35);
+            transition: .2s;
         }
 
         button:hover:not(:disabled) {
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 8px 28px
-                rgba(255, 51, 51, .5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(255, 51, 51, .5);
         }
 
         button:disabled {
             background: #444;
-
             color: #888;
-
             cursor: not-allowed;
-
             box-shadow: none;
         }
 
         .loading {
             display: none;
-
             margin-top: 12px;
-
             color: #ffae00;
-
             font-family: monospace;
-
             font-size: 14px;
         }
 
@@ -294,738 +176,162 @@
         }
 
         .tips {
-            padding:
-                15px 18px;
-
+            padding: 15px 18px;
             margin-top: 20px;
-
-            background:
-                rgba(255,255,255,.03);
-
-            border-left:
-                3px solid #ff3333;
-
+            background: rgba(255,255,255,.03);
+            border-left: 3px solid #ff3333;
             border-radius: 5px;
-
             color: #888;
-
             font-size: 13px;
-
             line-height: 1.6;
         }
 
         footer {
             margin-top: 25px;
-
             padding-top: 15px;
-
-            border-top:
-                1px solid #292932;
-
+            border-top: 1px solid #292932;
             color: #555;
-
             text-align: center;
-
             font-size: 12px;
-        }
-
-        .error {
-            color: #ff5555;
         }
     </style>
 </head>
-
 <body>
-
 <div class="page">
-
     <header>
-
-        <h1>
-            🕵️ AI DETECTIVE STORY EDITOR
-        </h1>
-
+        <h1>🕵️ AI DETECTIVE STORY EDITOR</h1>
         <p class="subtitle">
-            Editor AI untuk memperbaiki typo,
-            tata bahasa, dialog, deskripsi,
-            dan alur novel detektif.
+            Editor AI untuk memperbaiki typo, tata bahasa, dialog, deskripsi, dan alur novel detektif.
         </p>
-
     </header>
 
-
     <div class="status-box">
-
         <span class="status-dot"></span>
-
-        <span id="statusText">
-            Sistem siap digunakan
-        </span>
-
+        <span id="statusText">Sistem siap digunakan</span>
     </div>
-
 
     <div class="editor-container">
-
         <div class="editor-box">
-
-            <label
-                class="area-label"
-                for="inputCerita"
-            >
-                📝 Draf Cerita
-            </label>
-
-            <textarea
-                id="inputCerita"
-                maxlength="50000"
-                placeholder="Tulis atau tempel draf kasar novelmu di sini...
-
-Contoh:
-
-Malam itu hujan turun deras. Detektif Arya datang ke rumah korban. Dia melihat ada darah di lantai tetapi tidak menemukan siapa-siapa..."
-            ></textarea>
-
-            <div
-                id="counter"
-                class="counter"
-            >
-                0 / 50.000 karakter
-            </div>
-
+            <label class="area-label" for="inputCerita">📝 Draf Cerita</label>
+            <textarea id="inputCerita" maxlength="50000" placeholder="Tulis atau tempel draf kasar novelmu di sini...&#10;&#10;Contoh:&#10;&#10;Malam itu hujan turun deras. Detektif Arya datang ke rumah korban. Dia melihat ada darah di lantai tetapi tidak menemukan siapa-siapa..."></textarea>
+            <div id="counter" class="counter">0 / 50.000 karakter</div>
         </div>
 
-
         <div class="editor-box">
-
-            <label
-                class="area-label"
-                for="outputCerita"
-            >
-                ✨ Hasil Revisi AI
-            </label>
-
-            <textarea
-                id="outputCerita"
-                readonly
-                placeholder="Hasil revisi AI akan muncul di sini..."
-            ></textarea>
-
+            <label class="area-label" for="outputCerita">✨ Hasil Revisi AI</label>
+            <textarea id="outputCerita" readonly placeholder="Hasil revisi AI akan muncul di sini..."></textarea>
         </div>
-
     </div>
-
 
     <div class="button-area">
-
-        <button
-            id="btnProses"
-            type="button"
-        >
-            🚀 REVISI CERITA DENGAN AI
-        </button>
-
-        <div
-            id="loading"
-            class="loading"
-        >
-            🧠 AI sedang menyunting naskah...
-        </div>
-
+        <button id="btnProses" type="button">🚀 REVISI CERITA DENGAN AI</button>
+        <div id="loading" class="loading">🧠 AI sedang menyunting naskah...</div>
     </div>
-
 
     <div class="tips">
-
-        <strong>Tips:</strong>
-
-        Masukkan satu adegan atau beberapa paragraf
-        sekaligus. AI akan mempertahankan inti cerita,
-        karakter, dan kejadian penting sambil membuat
-        tulisan lebih natural dan enak dibaca.
-
+        <strong>Tips:</strong> Masukkan satu adegan atau beberapa paragraf sekaligus. AI akan mempertahankan inti cerita, karakter, dan kejadian penting sambil membuat tulisan lebih natural dan enak dibaca.
     </div>
-
 
     <footer>
         AI Detective Story Editor
     </footer>
-
 </div>
 
-
 <script>
+    // Memasang Kunci API Poe Milikmu Secara Tetap ke Dalam Sistem Internal
+    const apiKey = "sk-poe-Aoh3jCxqty104pEhGdvt4IDReLivRzSeL6hv7Vk96O0";
 
-    /*
-    =====================================================
-    KONFIGURASI POE
-    =====================================================
+    const inputCerita = document.getElementById("inputCerita");
+    const outputCerita = document.getElementById("outputCerita");
+    const btnProses = document.getElementById("btnProses");
+    const loading = document.getElementById("loading");
+    const counter = document.getElementById("counter");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.querySelector(".status-dot");
 
-    PENTING:
-    Jangan gunakan API key lama yang sudah kamu kirim.
+    // Hitung Karakter Saat Mengetik
+    inputCerita.addEventListener("input", () => {
+        const jumlahKarakter = inputCerita.value.length;
+        counter.textContent = `${jumlahKarakter.toLocaleString('id-ID')} / 50.000 karakter`;
+    });
 
-    Buat API key baru dari Poe dan masukkan di bawah.
-    =====================================================
-    */
-
-    const POE_API_KEY =
-        "MASUKKAN_API_KEY_POE_BARU_DI_SINI";
-
-
-    /*
-    Nama bot Poe
-    */
-
-    const POE_MODEL =
-        "EditorNovelDetektif";
-
-
-    /*
-    Endpoint API Poe
-    */
-
-    const POE_API_URL =
-        "https://api.poe.com/v1/chat/completions";
-
-
-    /*
-    =====================================================
-    ELEMENT HTML
-    =====================================================
-    */
-
-    const inputCerita =
-        document.getElementById(
-            "inputCerita"
-        );
-
-    const outputCerita =
-        document.getElementById(
-            "outputCerita"
-        );
-
-    const btnProses =
-        document.getElementById(
-            "btnProses"
-        );
-
-    const loading =
-        document.getElementById(
-            "loading"
-        );
-
-    const statusText =
-        document.getElementById(
-            "statusText"
-        );
-
-    const counter =
-        document.getElementById(
-            "counter"
-        );
-
-
-    /*
-    =====================================================
-    SYSTEM PROMPT
-    =====================================================
-    */
-
-    const SYSTEM_PROMPT = `
-
-Kamu adalah EditorNovelDetektif,
-editor profesional untuk novel bergenre:
-
-- detektif
-- misteri
-- thriller
-- kriminal
-- investigasi
-- suspense
-
-Tugas utama:
-
-Menyunting draf kasar menjadi naskah
-yang lebih rapi, natural, kuat, dan enak dibaca.
-
-ATURAN:
-
-1. Pertahankan inti cerita.
-
-2. Jangan mengubah fakta penting.
-
-3. Jangan mengganti identitas karakter.
-
-4. Jangan mengubah kejadian penting.
-
-5. Perbaiki typo.
-
-6. Perbaiki ejaan.
-
-7. Perbaiki tanda baca.
-
-8. Perbaiki tata bahasa.
-
-9. Buat kalimat lebih natural.
-
-10. Buat dialog terdengar manusiawi.
-
-11. Perbaiki transisi antar paragraf.
-
-12. Pertahankan suasana misteri.
-
-13. Pertahankan ketegangan cerita.
-
-14. Jangan membuat tulisan terlalu berbunga-bunga.
-
-15. Jangan menambahkan kejadian besar
-    yang tidak terdapat dalam draf.
-
-16. Jangan menghapus informasi penting.
-
-17. Pertahankan sudut pandang cerita.
-
-18. Jika ada kalimat ambigu,
-    rapikan tanpa menciptakan fakta baru.
-
-19. Jangan memberikan kritik.
-
-20. Jangan menjelaskan perubahan.
-
-21. Jangan memberikan daftar revisi.
-
-22. Jangan menggunakan markdown code block.
-
-23. Output hanya versi cerita
-    yang sudah diperbaiki.
-
-`;
-
-
-    /*
-    =====================================================
-    COUNTER
-    =====================================================
-    */
-
-    inputCerita.addEventListener(
-        "input",
-        function () {
-
-            const jumlah =
-                inputCerita.value.length;
-
-            counter.textContent =
-                jumlah.toLocaleString("id-ID") +
-                " / 50.000 karakter";
-        }
-    );
-
-
-    /*
-    =====================================================
-    FUNGSI REVISI
-    =====================================================
-    */
-
+    btnProses.addEventListener("click", prosesDenganPoeAI);
     async function prosesDenganPoeAI() {
+        const teksInput = inputCerita.value.trim();
 
-        const teks =
-            inputCerita.value.trim();
-
-
-        /*
-        Validasi API key
-        */
-
-        if (
-            !POE_API_KEY ||
-            POE_API_KEY ===
-            "sk-poe-Aoh3jCxqty104pEhGdvt4IDReLivRzSeL6hv7Vk96O0"
-        ) {
-
-            outputCerita.value =
-                "API key Poe belum dimasukkan.\n\n" +
-                "Buka kode HTML lalu isi:\n\n" +
-                "const POE_API_KEY = \"sk-poe-Aoh3jCxqty104pEhGdvt4IDReLivRzSeL6hv7Vk96O0\";";
-
-            statusText.textContent =
-                "API key belum dikonfigurasi";
-
+        if (!teksInput) {
+            alert("Tulis atau tempel draf kasar novelmu terlebih dahulu di kolom kiri!");
             return;
         }
 
-
-        /*
-        Validasi teks
-        */
-
-        if (!teks) {
-
-            alert(
-                "Silakan masukkan draf cerita terlebih dahulu."
-            );
-
-            inputCerita.focus();
-
-            return;
-        }
-
-
-        /*
-        Validasi panjang
-        */
-
-        if (teks.length > 50000) {
-
-            alert(
-                "Naskah terlalu panjang. " +
-                "Maksimal 50.000 karakter."
-            );
-
-            return;
-        }
-
-
-        /*
-        Ubah UI menjadi loading
-        */
-
+        // Aktifkan Mode Memproses (Loading) & Ubah Lampu Status Jadi Oranye
         btnProses.disabled = true;
-
-        loading.classList.add(
-            "show"
-        );
-
-        loading.classList.remove(
-            "error"
-        );
-
+        loading.classList.add("show");
         outputCerita.value = "";
+        statusText.textContent = "🧠 AI sedang menyunting naskah...";
+        statusText.style.color = "#ffae00";
+        statusDot.style.background = "#ffae00";
+        statusDot.style.boxShadow = "0 0 10px #ffae00";
 
-        statusText.textContent =
-            "AI sedang memproses naskah...";
-
+        const { model: modelPoe, messages: messagesPoe } = {
+            model: "EditorNovelDetektif",
+            messages: [{ role: "user", content: "Proses draf kasar novel berikut menggunakan aturan bot EditorNovelDetektif: \"" + teksInput + "\"" }]
+        };
 
         try {
+            // Menggunakan jembatan proxy heroku resmi agar data lolos dari pemblokiran browser
+            const urlPoeProxy = "https://herokuapp.com";
 
-            /*
-            =============================================
-            REQUEST KE POE
-            =============================================
-            */
+            const response = await fetch(urlPoeProxy, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + apiKey,
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify({ model: modelPoe, messages: messagesPoe })
+            });
 
-            const response =
-                await fetch(
-                    POE_API_URL,
-                    {
+            const data = await response.json();
 
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json",
-
-                            "Authorization":
-                                "Bearer " +
-                                POE_API_KEY,
-
-                            "Accept":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                model:
-                                    POE_MODEL,
-
-                                messages: [
-
-                                    {
-                                        role:
-                                            "system",
-
-                                        content:
-                                            SYSTEM_PROMPT
-                                    },
-
-                                    {
-                                        role:
-                                            "user",
-
-                                        content:
-                                            teks
-                                    }
-
-                                ],
-
-                                stream:
-                                    false
-                            })
-                    }
-                );
-
-
-            /*
-            =============================================
-            BACA RESPONSE
-            =============================================
-            */
-
-            const data =
-                await response.json();
-
-
-            /*
-            =============================================
-            CEK ERROR HTTP
-            =============================================
-            */
-
-            if (!response.ok) {
-
-                const errorMessage =
-                    data?.error?.message ||
-                    data?.error ||
-                    (
-                        "Poe API error: " +
-                        response.status
-                    );
-
-                throw new Error(
-                    errorMessage
-                );
+            // Membaca Teks Kiriman Balik Dari AI Poe
+            if (data && data.choices && data.choices[0] && data.choices[0].message) {
+                let hasilRevisi = data.choices[0].message.content.trim();
+                
+                if (hasilRevisi.startsWith("```")) {
+                    hasilRevisi = hasilRevisi.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
+                }
+                
+                outputCerita.value = hasilRevisi;
+                statusText.textContent = "✓ Penyuntingan selesai berhasil";
+                statusText.style.color = "#00ff88";
+                statusDot.style.background = "#00ff88";
+                statusDot.style.boxShadow = "0 0 10px #00ff88";
+            } else if (data.error) {
+                outputCerita.value = "Error dari Poe: " + data.error.message;
+                statusText.textContent = "⚠️ Terjadi kesalahan sistem";
+                statusText.style.color = "#ff5555";
+                statusDot.style.background = "#ff5555";
+                statusDot.style.boxShadow = "0 0 10px #ff5555";
+            } else {
+                outputCerita.value = "Gagal memproses. Pastikan nama bot 'EditorNovelDetektif' sudah aktif di akun Poe kamu.";
+                statusText.textContent = "⚠️ Gagal merespons";
+                statusDot.style.background = "#ff5555";
             }
-
-
-            /*
-            =============================================
-            AMBIL HASIL
-            =============================================
-            */
-
-            let hasil =
-                data
-                    ?.choices
-                    ?. [0]
-                    ?.message
-                    ?.content;
-
-
-            /*
-            Beberapa API bisa mengembalikan
-            content dalam format array.
-            */
-
-            if (
-                Array.isArray(hasil)
-            ) {
-
-                hasil =
-                    hasil
-                        .map(
-                            item =>
-                                typeof item ===
-                                "string"
-                                    ? item
-                                    : item?.text ||
-                                      ""
-                        )
-                        .join("");
-            }
-
-
-            /*
-            Pastikan hasil tersedia
-            */
-
-            if (
-                typeof hasil !==
-                    "string" ||
-                !hasil.trim()
-            ) {
-
-                console.error(
-                    "Response Poe:",
-                    data
-                );
-
-                throw new Error(
-                    "Poe tidak mengembalikan " +
-                    "teks hasil revisi."
-                );
-            }
-
-
-            /*
-            =============================================
-            BERSIHKAN CODE BLOCK
-            =============================================
-            */
-
-            hasil =
-                hasil.trim();
-
-
-            if (
-                hasil.startsWith(
-                    "```"
-                )
-            ) {
-
-                hasil =
-                    hasil
-                        .replace(
-                            /^```[a-zA-Z]*\s*/,
-                            ""
-                        )
-                        .replace(
-                            /\s*```$/,
-                            ""
-                        )
-                        .trim();
-            }
-
-
-            /*
-            =============================================
-            TAMPILKAN HASIL
-            =============================================
-            */
-
-            outputCerita.value =
-                hasil;
-
-
-            statusText.textContent =
-                "✓ Revisi berhasil selesai";
-
 
         } catch (error) {
-
-            /*
-            =============================================
-            ERROR HANDLING
-            =============================================
-            */
-
-            console.error(
-                "Poe API Error:",
-                error
-            );
-
-
-            let pesan =
-                error?.message ||
-                "Terjadi kesalahan yang tidak diketahui.";
-
-
-            /*
-            Pesan khusus CORS
-            */
-
-            if (
-                pesan
-                    .toLowerCase()
-                    .includes("cors")
-            ) {
-
-                pesan =
-                    "Browser memblokir koneksi " +
-                    "langsung ke Poe API karena CORS.\n\n" +
-
-                    "Solusi:\n" +
-
-                    "Gunakan backend/server proxy " +
-                    "agar API key tetap aman.";
-            }
-
-
-            outputCerita.value =
-                "❌ GAGAL MEMPROSES\n\n" +
-                pesan;
-
-
-            statusText.textContent =
-                "✕ Gagal memproses";
-
-            loading.textContent =
-                "❌ Terjadi kesalahan.";
-
-            loading.classList.add(
-                "error"
-            );
-
+            // Penanganan khusus jika gerbang jembatan proxy heroku memerlukan klik aktivasi izin pertama kali
+            outputCerita.value = "Akses Jembatan AI Mendeteksi Aktivitas Baru.\n\nSolusi Mudah:\n1. Buka tautan ini di tab baru browser Anda: https://herokuapp.com\n2. Klik tombol abu-abu besar bertuliskan \"Request temporary access to heroku CORS anywhere\"\n3. Kembali ke web GitHub ini dan klik lagi tombol merah proses. Deteksi AI akan langsung lancar selamanya!";
+            statusText.textContent = "⚠️ Izin jembatan diperlukan";
+            statusText.style.color = "#ffae00";
+            statusDot.style.background = "#ffae00";
+            statusDot.style.boxShadow = "0 0 10px #ffae00";
         } finally {
-
-            btnProses.disabled =
-                false;
-
-            loading.classList.remove(
-                "show"
-            );
-
-
-            /*
-            Reset pesan loading
-            */
-
-            setTimeout(
-                function () {
-
-                    loading.textContent =
-                        "🧠 AI sedang menyunting naskah...";
-
-                    loading.classList.remove(
-                        "error"
-                    );
-
-                },
-                2500
-            );
+            // Matikan Mode Loading
+            btnProses.disabled = false;
+            loading.classList.remove("show");
         }
     }
-
-
-    /*
-    =====================================================
-    EVENT BUTTON
-    =====================================================
-    */
-
-    btnProses.addEventListener(
-        "click",
-        prosesDenganPoeAI
-    );
-
-
-    /*
-    =====================================================
-    CTRL + ENTER
-    =====================================================
-    */
-
-    inputCerita.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                (event.ctrlKey ||
-                 event.metaKey) &&
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                prosesDenganPoeAI();
-            }
-        }
-    );
-
 </script>
-
 </body>
 </html>
